@@ -28,7 +28,7 @@ class Metric:
         all = 0
         for user in self.test:
             tu = self.test[user]
-            rank = self.recs[user]
+            rank = set(self.recs[user])
             for item, _ in rank:
                 if item in tu:
                     hit += 1
@@ -39,13 +39,13 @@ class Metric:
     def Precision(self):
         hit = 0
         all = 0
-        for user in self.train.keys():
-            tu = self.test[user]
+        for user in self.test:
+            tu = set(self.test[user])
             rank = self.recs[user]
             for item, _ in rank:
                 if item in tu:
                     hit += 1
-            all += NameError
+            all += len(rank)
         
         return hit / (all * 1.0)
 
@@ -54,7 +54,7 @@ class Metric:
         recommend_items = set()
         all_items = set()
         for user in self.test:
-            for item in self.train[user].keys:
+            for item in self.train[user]:
                 all_items.add(item)
             rank = self.recs[user]
             for item, _ in rank:
@@ -66,15 +66,15 @@ class Metric:
     def Popularity(self):
         item_popularity = dict()
         # 统计训练集中的物品的流行度
-        for user, items in self.train.items():
-            for item in items.keys():
-                if item in item.keys():
+        for user in self.train:
+            for item in self.train[user]:
+                if item not in item_popularity:
                     item_popularity[item] = 0
                 item_popularity[item] += 1
         
         ret = 0
         n = 0
-        for user in self.train.keys():
+        for user in self.test:
             rank = self.recs[user]
             for item, _ in rank:
                 # 取对数，因为流行度满足长尾分布，取对数后，流行度更加稳定
