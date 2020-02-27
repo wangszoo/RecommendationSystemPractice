@@ -6,11 +6,11 @@ from Metric import *
 from tqdm import tqdm
 import time
 
-def UserRecommend(train, K, N, AlgorType='UserCF'):
+def UserRecommend(train, K, Num, AlgorType='UserCF'):
     '''
     train: 训练数据集
     K: 取TopK相似用户数目
-    N: 超参数，设置取TopN推荐物品数目
+    Num: 超参数，设置取TopN推荐物品数目
     return: GetRecommendation,推荐接口函数
     '''
     # 余弦相似度，时间复杂度O(|U|*|U|)
@@ -30,8 +30,8 @@ def UserRecommend(train, K, N, AlgorType='UserCF'):
     for u, items in train.items():
         for i in items:
             if i not in item_users:
-                item_users[i] = set()
-            item_users[i].add(u)
+                item_users[i] = []
+            item_users[i].append(u)
 
     # calculate co-rated items between users
     C = dict()
@@ -51,7 +51,7 @@ def UserRecommend(train, K, N, AlgorType='UserCF'):
                     C[u][v] = 0
                 if AlgorType == 'UserCF':
                     C[u][v] += 1
-                # 增加如热门产品的惩罚， User-IIf算法
+                # 增加对热门产品的惩罚， User-IIf算法
                 else:
                     C[u][v] += 1 / math.log(1 + len(users))
 
@@ -75,8 +75,7 @@ def UserRecommend(train, K, N, AlgorType='UserCF'):
                         items[item] = 0 
                     items[item] += C[user][u]
 
-        recs = list(sorted(items.items(), key=lambda x: x[1], reverse=True))[:N]
-        
+        recs = list(sorted(items.items(), key=lambda x: x[1], reverse=True))[:Num]
         return recs
     
     return GetRecommendation
