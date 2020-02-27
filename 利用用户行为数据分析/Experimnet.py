@@ -20,7 +20,7 @@ class Experiment():
         
     @timmer
     def worker(self, train, test):
-        getRecommendation = UserRecommend(train, self.K, self.N, AlgorType='UserCF')
+        getRecommendation = UserRecommend(train, self.K, self.N, self.rt)
         metric = Metric(train, test, getRecommendation)
 
         return metric.eval()
@@ -30,12 +30,14 @@ class Experiment():
         metrics = {'Precision': 0, 'Recall': 0, 
                     'Coverage': 0, 'Popularity': 0}
         dataset = Dataset(self.fp)
-        for ii in range(self.M):
+        # for ii in range(self.M):
+        for ii in range(2):
             train, test = dataset.splitData(self.M, ii)
             print('Experiment {}:'.format(ii))
             metric = self.worker(train, test)
             metrics = {k: metrics[k]+metric[k] for k in metrics}
-        metrics = {k: metrics[k] / self.M for k in metrics}
+        # metrics = {k: metrics[k] / self.M for k in metrics}
+        metrics = {k: metrics[k] / 2 for k in metrics}
         print('Average Result (M={}, K={}, N={}): {}'.format(\
                             self.M, self.K, self.N, metrics))
 
@@ -45,3 +47,4 @@ if __name__ == "__main__":
     random_exp_cf = Experiment(M, K, N, rt='UserCF')
     random_exp_cf.run()
     # random_exp_iif = Experiment(M, K, N, rt='UserIIF')
+    # random_exp_iif.run()
