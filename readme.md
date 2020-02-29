@@ -10,3 +10,7 @@
 
 - UserCF算法和UserIIF算法
 
+#### 基于物品的协同滤波算法
+
+- ItemCF算法，ItemIUF算法和ItemCF_norm算法
+

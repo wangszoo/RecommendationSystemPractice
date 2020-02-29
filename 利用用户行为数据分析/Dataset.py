@@ -4,7 +4,7 @@
 
 import random
 import math
-from Metric import *
+from metric import *
 
 class Dataset():
 
@@ -55,4 +55,4 @@ class Dataset():
         return convert_dict(train), convert_dict(test)
 
 # if __name__ == '__main__':
-#     data = Dataset(fp='/Users/wangzhou/Documents/code/RecommendedSystem/Dataset/ml-1m/ratings.dat')
+#     data = Dataset(fp='../Dataset/ml-1m/ratings.dat')
